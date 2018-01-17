@@ -22,15 +22,17 @@ app.post('/server/login', (req, res) => {
 });
 
 app.post('/server/signup', (req, res) => {
-
+  ///These logs are needed temporarily for heroku testing & logging
   console.log('INSIDE SERVER ROUTE FOR SIGNUP');
   console.log('REQ BODY', req.body);
   db.postUser(req.body, (err, results) => {
     if (err) {
+      ///These logs are needed temporarily for heroku testing & logging
       console.log('REACHED ERROR CALLBACK FOR POST USER');
       res.status(400);
       res.end('Failed to Create User.');
     } else {
+      ///These logs are needed temporarily for heroku testing & logging
       console.log('REACHED SUCCESS CALLBACK FOR POST USER');
       res.status(201).json(results);
     }
