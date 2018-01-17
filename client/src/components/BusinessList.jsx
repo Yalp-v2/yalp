@@ -24,7 +24,16 @@ class BusinessList extends React.Component {
   }
 
   getFavoritedBusinesses() {
-
+    const { favorites } = this.props;
+    return this.props.businesses.data.map(business => 
+      favorites[business.id] ?
+      <Link key={business.id} to={`/business/${business.id}`} onClick={(e) => this.props.updateBusiness(e, business)} style={{ textDecoration: 'none' }}>    
+      <BusinessEntry business={business}
+                     key={business.id}
+                     favorite={favorites[business.id] ? true : false} />
+      </Link> 
+      : null
+    )
   }
 
   getOpenBusinesses() {
@@ -58,13 +67,17 @@ class BusinessList extends React.Component {
 
         <button id="filterPrice" className="filterButton"> Price </button>
         <button id="filterOpen" className="filterButton" onClick={ () => {
-          console.log("hello!")
+          console.log(this)
+          this.getOpenBusinesses();
         }
         }> Is Open </button>
         <button id="filterNearby" className="filterButton"> Nearby </button>
-        <button id="filterFavorited" className="filterButton"> Favorited </button>
+        <button id="filterFavorited" className="filterButton" onClick={ () => {
+          this.getFavoritedBusinesses();
+        }
+        }> Favorited </button>
       </div>
-        {this.state.booleanFilters.open ? this.getOpenBusinesses() : this.getBusinessEntries()}
+        {this.getBusinessEntries()}
       </div>
     )
   }
