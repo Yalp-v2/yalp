@@ -102,6 +102,19 @@ a {
 .favorite {
   right: 10px;
 }
+
+.filterOptionsBar {
+  text-align: center;
+  border: solid yellow 1px;
+  border-radius: 5px;
+}
+
+.filterButton {
+  display: inline-block;
+  margin: 5px;
+  border-radius: 5px;
+}
+
 .rating {
   margin: 3px 0px;
 }
