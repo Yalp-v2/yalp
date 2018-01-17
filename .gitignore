@@ -30,3 +30,12 @@ config.js
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules/
 bower_components/
+
+# Ignore DS Store
+.DS_Store
+
+# Ignore Environment variables
+/*.env
+
+# This were suggested to add by heroku
+npm-debug.log
