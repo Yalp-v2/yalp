@@ -22,11 +22,16 @@ app.post('/server/login', (req, res) => {
 });
 
 app.post('/server/signup', (req, res) => {
+
+  console.log('INSIDE SERVER ROUTE FOR SIGNUP');
+  console.log('REQ BODY', req.body);
   db.postUser(req.body, (err, results) => {
     if (err) {
+      console.log('REACHED ERROR CALLBACK FOR POST USER');
       res.status(400);
       res.end('Failed to Create User.');
     } else {
+      console.log('REACHED SUCCESS CALLBACK FOR POST USER');
       res.status(201).json(results);
     }
   });

@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS yalp;
-
-CREATE DATABASE yalp;
-
-USE yalp;
+-- DROP DATABASE IF EXISTS yalp;
+--
+-- CREATE DATABASE yalp;
+--
+-- USE yalp;
 
 
 CREATE TABLE `users` (

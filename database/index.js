@@ -13,6 +13,14 @@ if (process.env.JAWSDB_URL) {
   })
 }
 
+connection.connect(function(err) {
+  if (err) {
+    console.log('Error connecting to database', err);
+  } else {
+    console.log('Database connected!');
+  }
+});
+
 const getUser = function (user, cb) {
   //user obj contain username & pw for authentication
   let query = `SELECT * FROM users;`
