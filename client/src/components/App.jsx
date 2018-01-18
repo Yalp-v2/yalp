@@ -20,9 +20,35 @@ class App extends React.Component {
       loggedIn: false,
       checkedIn: false,
       favorites: {},
+      location: null
     }
     this.photos = [];
     this.searchResults = {};
+    this.count = 0;
+  }
+
+  componentWillUpdate(nextProps, NextState) {
+    if(NextState.location && NextState.userID && this.count === 0){
+      this.count++
+      axios.post(`/userLocation/${NextState.userID}`, {location: NextState.location})
+        .then(() => console.log('saved'))
+    }
+  }
+
+  componentDidMount(){
+    navigator.geolocation.getCurrentPosition((success, error) => {
+      if(error) {
+        console.log('Location services failed')
+      } else {
+        let lat = success.coords.latitude.toFixed(4)
+        let lon = success.coords.longitude.toFixed(4)
+        console.log(lat + ' ' + lon)
+        console.log(this.state.userID)
+        this.setState({
+          location: lat + ',' + lon
+        })
+      }
+    })
   }
 
   createUser(userData) {
@@ -70,9 +96,9 @@ class App extends React.Component {
     this.setState({loggedIn: false})
   }
 
-  getBusinesses(search) {
+  getBusinesses(search, userID) {
     let self = this;
-    axios.get(`/server/search/${search}`)
+    axios.get(`/server/search/${search}`, {params: {userID: this.state.userID}})
       .then(resp => {
         console.log(resp);
         self.searchResults = resp;

@@ -35,7 +35,7 @@ app.post('/server/signup', (req, res) => {
 
 // when user search
 app.get('/server/search/:query', (req, res) => {
-  api.searchBusinesses(req.params.query, results => {
+  api.searchBusinesses(req.params.query, req.url.split('=')[1], results => {
     res.status(201).json(results.data.results);
   })
   // use below for test
@@ -223,6 +223,30 @@ app.get('/user/favorites/:id', (req, res) => {
     res.status(200).json(result);
   });
 });
+
+//Saves users most recent location for suggestion purposes
+app.post('/userLocation/:id', (req, res) => {
+  console.log(req.params, '!!!')
+  console.log(req.body, '!!!')
+  db.saveLocation(req.params.id, req.body.location, (err, results) => {
+    if(err){
+      throw err
+    } else {
+      //console.log(results)
+      //res.statusCode(200)
+    }
+  })
+})
+
+app.get('/userLocation/:id'), (req, res) => {
+  db.getLocation(req.body.userID, (err, results) => {
+    if(err){
+      throw err
+    } else {
+      res.json(results)
+    }
+  })
+}
 
 const server = app.listen(process.env.PORT || 3000, () => {
   var port = server.address().port;
