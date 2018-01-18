@@ -153,8 +153,8 @@ class Profile extends React.Component {
   
   render() {
     return (
-      <div>
-        <div>Profile Page</div>
+      <div className="profileContainer">
+        <div >Profile Page</div>
         <div>
           <div>Profile Info</div>
           {this.renderUserInfo()}
