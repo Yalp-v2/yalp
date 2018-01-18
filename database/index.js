@@ -377,6 +377,29 @@ const getFavorites = function(userId, cb) {
     });
 };
 
+const saveLocation = (userId, location, cb) => {
+  let queryStr = 'UPDATE users SET location = ? where id = ?';
+  let params = [location, userId];
+  connection.query(queryStr, params, (err, results) => {
+    if(err){
+      cb(err, null);
+    } else {
+      cb(null, results);
+    }
+  });
+}
+
+const getLocation = (userID, cb) => {
+  let queryStr = 'SELECT location FROM users WHERE id = ?';
+  connection.query(queryStr, userID, (err, results) => {
+    if(err) {
+      cb(err, null)
+    } else {
+      cb(null, results)
+    }
+  })
+}
+
 //MYSQL QUERIES FOR:
 
 // Businesses
@@ -494,5 +517,7 @@ module.exports = {
   getFriends,
   getCheckins,
   getReviews,
-  getFavorites
+  getFavorites,
+  saveLocation,
+  getLocation
 }
