@@ -9,13 +9,16 @@ class BusinessList extends React.Component {
     this.state = {
       entries: this.props.businesses.data,
       activeFilters: {
-        price: false,
+        price: true,
         rating: false,
         is_open: false,
         nearby: false,
         favorited: false
       }
     }
+
+    this.sortByPrice = this.sortByPrice.bind(this)
+    this.sortByRating = this.sortByRating.bind(this)
   }
   componentWillMount() {
     document.body.style.background = "url('wood.jpg')";
@@ -23,39 +26,58 @@ class BusinessList extends React.Component {
     document.body.style.backgroundRepeat = "repeat-y";
   }
 
-  sortByPrice() {
-    let pricedEntries = this.props.businesses.data.filter(entry => entry.price_level);
+  sortByPrice(entriesToSort) {
+    let pricedEntries = entriesToSort.filter(entry => entry.price_level);
     let sortedPricedEntries = pricedEntries.sort((a, b) => {
       return b.price_level - a.price_level
     })
-    this.updateState(sortedPricedEntries);
+    return sortedPricedEntries
   }
 
-  sortByRating() {
-    let ratedEntries = this.props.businesses.data.sort((a, b) => {
+  sortByRating(entriesToSort) {
+    let ratedEntries = entriesToSort.sort((a, b) => {
       return b.rating - a.rating 
     })
-    this.updateState(ratedEntries);
+    return ratedEntries;
   }
 
-    sortByFavorited() {
+    sortByFavorited(entriesToSort) {
     const {favorites} = this.props;
-    var favoritedEntries = this.props.businesses.data.filter(entry => {
+    let favoritedEntries = entriesToSort.filter(entry => {
       if (favorites[entry.id]){
        return entry
       }
     })
-    this.updateState(favoritedEntries);
+    return favoritedEntries;
   }
 
-  sortByOpen() {
-    let openEntries = this.props.businesses.data.filter(entry => {
+  sortByOpen(entriesToSort) {
+    let openEntries = entriesToSort.data.filter(entry => {
       if (entry.hasOwnProperty('opening_hours') && entry.opening_hours.open_now){
         return entry
       }
     });
-    this.updateState(openEntries);
+    return openEntries
+  }
 
+
+  applyFilters(entriesToFilter) {
+    let entries = entriesToFilter;
+    console.log(entries);
+    let filters = {
+      price: this.sortByPrice,
+      is_open: this.sortByOpen,
+      rating: this.sortByRating,
+      favorited: this.sortByFavorited
+    }
+
+    for (var filter in filters) {
+      if (this.state.activeFilters[filter]){
+        var operation = filters[filter]
+        entries = operation(entries)
+      }
+    }
+    this.updateState(entries);
   }
 
   updateState(filteredEntries) {
@@ -80,7 +102,16 @@ class BusinessList extends React.Component {
       <div className="filterOptionsBar">
 
         <button id="filterPrice" className="filterButton" onClick={ () => {
-          this.sortByPrice();
+          let toggled = !this.state.activeFilters.price;
+          this.setState({
+              activeFilters: {
+                price: toggled,
+                rating: this.activeFilters.rating,
+                is_open: this.activeFilters.is_open,
+                nearby: this.activeFilters.nearby,
+                favorited: this.activeFilters.favorited
+              }
+          })
         }}> Price </button>
         <button id="filterOpen" className="filterButton" onClick={ () => {
           this.sortByOpen();
