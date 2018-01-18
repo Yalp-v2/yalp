@@ -39,6 +39,7 @@ app.post('/server/signup', (req, res) => {
 // when user search
 app.get('/server/search/:query', (req, res) => {
   api.searchBusinesses(req.params.query, req.url.split('=')[1], results => {
+    console.log(results)
     res.status(201).json(results.data.results);
   })
   // use below for test
