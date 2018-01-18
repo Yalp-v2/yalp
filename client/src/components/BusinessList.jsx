@@ -53,6 +53,29 @@ class BusinessList extends React.Component {
     return favoritedEntries;
   }
 
+    sortPriceAndRating(entriesToSort, priority = 'rating') {
+    console.log(entriesToSort.length)
+    entriesToSort = entriesToSort.filter(entry => entry.rating && entry.price_level);
+    console.log(entriesToSort.length);
+    var sorted = entriesToSort.sort((a, b) => {
+      if (a.rating > b.rating) {
+        return -1
+      } else if (b.rating > a.rating) {
+        return 1 
+      } else if (b.rating == a.rating) {
+        console.log('even ', a.name, b.name, ' sorting by price')
+        if (a.price > b.price) {
+          return -1;
+        } else if (b.price_level > a.price_level) {
+          return 1;
+        }
+      }
+    })
+    return sorted;
+  }
+
+
+
   sortByOpen(entriesToSort) {
     let openEntries = entriesToSort.filter(entry => {
       if (entry.hasOwnProperty('opening_hours') && entry.opening_hours.open_now){
@@ -66,16 +89,16 @@ class BusinessList extends React.Component {
   applyFilters() {
     let entries = this.props.businesses.data;
     let filters = {
-      price: this.sortByPrice,
       is_open: this.sortByOpen,
-      rating: this.sortByRating,
+      price: this.sortByPrice,
+      rating: this.sortPriceAndRating,
       favorited: this.sortByFavorited
     }
 
     for (var filter in filters) {
       if (this.state.activeFilters[filter]){
         var operation = filters[filter]
-        entries = operation(entries)
+        entries = operation(entries) // need to fix prioritization issue
       }
     }
     return entries;
