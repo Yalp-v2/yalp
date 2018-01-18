@@ -15,7 +15,7 @@ if (process.env.JAWSDB_URL) {
   connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'toor',
     database: 'yalp'
   })
 }
@@ -166,14 +166,14 @@ const checkFavorite = function (userId, businessId, cb) {
   })
 }
 
-const addFavorite = function (userId, businessId, cb) {
+const addFavorite = function (userId, businessId, businessName, cb) {
   checkFavorite(userId, businessId, (err, bool) => {
     if (bool) {
       cb(null, false)
     } else {
-      let query = `INSERT INTO favorites (user_id, business_id) VALUES (?, ?);`
+      let query = `INSERT INTO favorites (user_id, business_id, business_name) VALUES (?, ?, ?);`
 
-      connection.query(query, [userId, businessId], (err, results) => {
+      connection.query(query, [userId, businessId, businessName], (err, results) => {
         if (err) {
           cb(err, false)
         } else {
@@ -366,12 +366,13 @@ const getReviews = function(userId, cb) {
 };
 
 const getFavorites = function(userId, cb) {
-    let query = 'select a.id, businesses.name from (select * from favorites where favorites.user_id = ?) a left join businesses on businesses.id = a.business_id;';
-
+    // let query = 'select a.id, businesses.name from (select * from favorites where favorites.user_id = ?) a left join businesses on businesses.id = a.business_id;';
+    let query = 'select * from favorites where user_id = ?;';
     connection.query(query, [userId], (err, results) => {
         if (err) {
             cb(err, null);
         } else {
+          console.log(results)
             cb(null, results);
         }
     });
