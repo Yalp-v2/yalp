@@ -59,6 +59,7 @@ CREATE TABLE `favorites` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `user_id` integer NOT NULL,
   `business_id` VARCHAR(255) NOT NULL,
+  `business_name` VARCHAR(255) NOT NULL,
   `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 );
@@ -130,24 +131,14 @@ INSERT INTO checkins (user_id, business_id) VALUES (6, '1e');
 INSERT INTO checkins (user_id, business_id) VALUES (6, '1f');
 
 
-INSERT INTO favorites (user_id, business_id) VALUES (1, '1a');
-INSERT INTO favorites (user_id, business_id) VALUES (1, '1b');
-INSERT INTO favorites (user_id, business_id) VALUES (1, '1c');
-INSERT INTO favorites (user_id, business_id) VALUES (2, '1d');
-INSERT INTO favorites (user_id, business_id) VALUES (1, '1e');
-INSERT INTO favorites (user_id, business_id) VALUES (1, '1f');
-INSERT INTO favorites (user_id, business_id) VALUES (3, '1a');
-INSERT INTO favorites (user_id, business_id) VALUES (3, '1b');
-INSERT INTO favorites (user_id, business_id) VALUES (3, '1c');
-INSERT INTO favorites (user_id, business_id) VALUES (4, '1d');
-INSERT INTO favorites (user_id, business_id) VALUES (4, '1e');
-INSERT INTO favorites (user_id, business_id) VALUES (4, '1f');
-INSERT INTO favorites (user_id, business_id) VALUES (5, '1a');
-INSERT INTO favorites (user_id, business_id) VALUES (5, '1b');
-INSERT INTO favorites (user_id, business_id) VALUES (5, '1c');
-INSERT INTO favorites (user_id, business_id) VALUES (6, '1d');
-INSERT INTO favorites (user_id, business_id) VALUES (6, '1e');
-INSERT INTO favorites (user_id, business_id) VALUES (6, '1f');
+INSERT INTO favorites (user_id, business_id, business_name) VALUES (1, '1a', 'Tu Lan');
+INSERT INTO favorites (user_id, business_id, business_name) VALUES (1, '1b', 'Chipotle');
+INSERT INTO favorites (user_id, business_id, business_name) VALUES (1, '1c', 'McDonalds');
+INSERT INTO favorites (user_id, business_id, business_name) VALUES (2, '1d', 'Fancy Steak House');
+INSERT INTO favorites (user_id, business_id, business_name) VALUES (1, '1e', 'Tempest');
+INSERT INTO favorites (user_id, business_id, business_name) VALUES (1, '1f', 'Some Expensive Place');
+
+
 
 
 INSERT INTO friends (user_id1, user_id2) VALUES (1, 2);

@@ -189,9 +189,9 @@ app.get('/server/profile/checkins', (req, res) => {
 })
 
 app.post('/profile/favorites', (req, res) => {
-  const { userId, businessId } = req.body;
+  const { userId, businessId, businessName } = req.body;
   console.log(userId, businessId)
-  db.addFavorite(userId, businessId, (err, result) => {
+  db.addFavorite(userId, businessId, businessName, (err, result) => {
     res.status(201).json(result);
   })
 })
