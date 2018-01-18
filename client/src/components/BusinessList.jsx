@@ -43,7 +43,7 @@ class BusinessList extends React.Component {
     return ratedEntries;
   }
 
-    sortByFavorited(entriesToSort) {
+  sortByFavorited(entriesToSort) {
     const favorites = this.props.favorites;
     let favoritedEntries = entriesToSort.filter(entry => {
       if (favorites[entry.id]){
@@ -53,24 +53,41 @@ class BusinessList extends React.Component {
     return favoritedEntries;
   }
 
-    sortPriceAndRating(entriesToSort, priority = 'rating') {
-    console.log(entriesToSort.length)
+  sortPriceAndRating(entriesToSort, priority = 'price') {
     entriesToSort = entriesToSort.filter(entry => entry.rating && entry.price_level);
-    console.log(entriesToSort.length);
-    var sorted = entriesToSort.sort((a, b) => {
-      if (a.rating > b.rating) {
-        return -1
-      } else if (b.rating > a.rating) {
-        return 1 
-      } else if (b.rating == a.rating) {
-        console.log('even ', a.name, b.name, ' sorting by price')
-        if (a.price > b.price) {
-          return -1;
-        } else if (b.price_level > a.price_level) {
-          return 1;
+    if (priority === 'rating') {
+      var sorted = entriesToSort.sort((a, b) => {
+        if (a.rating > b.rating) {
+          return -1
+        } else if (b.rating > a.rating) {
+          return 1 
+        } else if (b.rating == a.rating) {
+          console.log('even ', a.name, b.name, ' sorting by price')
+          if (a.price_level > b.price_level) {
+            return -1;
+          } else if (b.price_level > a.price_level) {
+            return 1;
+          }
         }
-      }
-    })
+      })
+    } else if (priority === 'price') {
+      var sorted = entriesToSort.sort((a, b) => {
+        if (a.price_level > b.price_level) {
+          return -1
+        } else if (b.price_level > a.price_level) {
+          return 1 
+        } else if (b.price_level == a.price_level) {
+          console.log('even ', a.name, b.name, ' sorting by rating')
+          if (a.rating > b.rating) {
+            return -1;
+          } else if (b.rating > a.rating) {
+            return 1;
+          }
+        }
+      })
+    }
+
+
     return sorted;
   }
 
