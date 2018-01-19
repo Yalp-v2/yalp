@@ -23,6 +23,7 @@ class BusinessList extends React.Component {
     this.sortByRating = this.sortByRating.bind(this)
     this.sortByFavorited = this.sortByFavorited.bind(this)
     this.sortByOpen = this.sortByOpen.bind(this);
+    this.clickHandler = this.clickHandler.bind(this);
   }
   componentWillMount() {
     document.body.style.background = "url('wood.jpg')";
@@ -105,34 +106,18 @@ class BusinessList extends React.Component {
   }
 
 
-  applyFilters() {
+  applyFilters(priority) {
+
     let operation;
     let entries = this.props.businesses.data;
-    let filters = {
-      is_open: this.sortByOpen,
-      price: this.sortByPrice,
-      rating: this.sortByRating,
-      favorited: this.sortByFavorited
-    }
+    let filters = Object.keys(this.state.activeFilters).filter(key => this.state.activeFilters[key]);
+    console.log(filters)
 
-    for (let filter in filters) { // handle multiple active filters better
-      if (this.state.activeFilters[filter] && filter != this.state.sortTypeToIgnore){
-        if (filter === 'price') {
-          if (this.state.activeFilters.rating) {
-            this.state.sortTypeToIgnore = 'rating';
-            console.log('prioritizing price ')
-            operation = this.sortPrioritizePrice;
-          }
-        } else if (filter === 'rating') {
-          if (this.state.activeFilters[filter] && filter != this.state.sortTypeToIgnore){
-            if (this.state.activeFilters.price){
-              this.state.sortTypeToIgnore = 'price';
-              console.log('prioritizing rating ')
-              operation = this.sortPrioritizeRating;
-            }
-          }
-        }
+    // reduce this.state.activeFilters object to only keys where values are tru
 
+
+    for (let filter in filters) { 
+      if (this.state.activeFilters[filter]) {
         operation = filters[filter]
         entries = operation(entries)
       }
@@ -167,21 +152,17 @@ class BusinessList extends React.Component {
     return (
       <div>
       <div className="filterOptionsBar">
-        <button id="filterPrice" className="filterButton" style={this.state.activeFilters.price ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}}  onClick={ () => {
-          this.clickHandler('price');
-        }}> Price </button>
         <button id="filterOpen" className="filterButton" style={this.state.activeFilters.is_open ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () => {
           this.clickHandler('is_open');
         }}> Is Open </button>
-        <button id="filterRating" className="filterButton" style={this.state.activeFilters.rating ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () =>{
-          this.clickHandler('rating');
-        }}> Rating </button>
         <button id="filterFavorited" className="filterButton" style={this.state.activeFilters.favorited ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () => {
            this.clickHandler('favorited');
          }}> Favorited </button>
       </div>
+      <div className="sortingOptionsBar">
+      <Sortable click={this.clickHandler} items={["Price", "Rating"]}/>
+      </div>
         {this.displayBusinessEntries()}
-        <Sortable />
       </div>
     )
   }
