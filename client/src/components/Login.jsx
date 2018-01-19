@@ -5,7 +5,7 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.formData = {
-      username: '',
+      email: '',
       password: ''
     }
   }
@@ -13,7 +13,7 @@ class Login extends React.Component {
   getFormData(e) {
     e.preventDefault();
     this.formData = {
-      username: this.refs.username.value,
+      email: this.refs.email.value,
       password: this.refs.password.value
     }
     this.props.loginUser(this.formData)
@@ -28,7 +28,7 @@ class Login extends React.Component {
           </button>
         </Link>
         <form onSubmit={ this.getFormData.bind(this) }>
-          <input ref="username" id="username" type="text" placeholder="Username" />
+          <input ref="email" id="email" type="text" placeholder="Email" />
           <input ref="password" id="password" type="password" placeholder="Password" />
           <input type="submit" value="Log In" />
         </form>
