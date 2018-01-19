@@ -45,14 +45,21 @@ class App extends React.Component {
     let self = this;
     axios.post('/server/login', userData)
       .then(resp => {
-        if (resp.data.length) {
+        // Removed the existing code that necessitated that the data field be an array type
+        // if (resp.data.length) {
+          console.log('WHAT IS THE RESP DATA', resp.data);
+          if (resp.data.email) {
           console.log('Rendering..')
           this.setState({
-            userId: resp.data[0].id,
-            username: resp.data[0].username,
-            password: resp.data[0].password,
-            email: resp.data[0].email,
-            userID: resp.data[0].id,
+
+            username: resp.data.username,
+            password: resp.data.password,
+            email: resp.data.email,
+            userID: resp.data.id,
+            // username: resp.data[0].username,
+            // password: resp.data[0].password,
+            // email: resp.data[0].email,
+            // userID: resp.data[0].id,
             loggedIn: true,
           });
           this.getFavorite()
@@ -200,14 +207,14 @@ class App extends React.Component {
           <Route path="/search" render={ () => <div id="form-background"><div id="form"><Search getBusinesses={this.getBusinesses.bind(this)}/></div></div> }/>
           <Route path="/login" render={ () => <div id="form-background"><div id="form"><Login loginUser={this.loginUser.bind(this)}/></div></div> }/>
           <Route path="/signup" render={ () => <div id="form-background"><div id="form"><Signup createUser={this.createUser.bind(this)}/></div></div> }/>
-          <Route path="/listings" render={ 
-            () => <div id="listings"><BusinessList 
-              businesses={this.searchResults} 
+          <Route path="/listings" render={
+            () => <div id="listings"><BusinessList
+              businesses={this.searchResults}
               updateBusiness={this.updateBusiness.bind(this)}
               favorites={this.state.favorites} /></div> } />
-          <Route path={`/business/${this.state.business.name}`} render={ 
-            () => <BusinessPage business={this.state.business} 
-              getBusinessInfo={this.getBusinessInfo.bind(this)} 
+          <Route path={`/business/${this.state.business.name}`} render={
+            () => <BusinessPage business={this.state.business}
+              getBusinessInfo={this.getBusinessInfo.bind(this)}
               getBusinesses={this.getBusinesses.bind(this)}
               getFavoriteInfo={this.getBusinessFav.bind(this)}
               checkIn={this.checkIn.bind(this)}
@@ -217,8 +224,8 @@ class App extends React.Component {
               getBusinessPhotos={this.getBusinessPhotos.bind(this)}
               photos={this.photos}
               favoriteIn={this.favoriteIn.bind(this)}
-              backToResults={this.backToResults.bind(this)} 
-              /> 
+              backToResults={this.backToResults.bind(this)}
+              />
             }
           />
           <Route path="/profile" render={ () => <div><Profile profileId={this.state.userID} /></div>}/>

@@ -8,9 +8,11 @@
 CREATE TABLE `users` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
-  `email` MEDIUMTEXT NOT NULL,
-  `password` MEDIUMTEXT NOT NULL,
-  `username` MEDIUMTEXT NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  `password` CHAR(60) NOT NULL,
+  `username` VARCHAR(20) NOT NULL,
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC),
   `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 );

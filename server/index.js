@@ -1,43 +1,67 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const app = express();
 const db = require('../database/index.js');
-const api = require('../client/helper/yelpHelpers.js')
+const api = require('../client/helper/yelpHelpers.js');
 
+require('./passport.js')(passport);
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+//Setting up passport
+app.use(session({ secret: 'Keyboard Warrior', resave: true, saveUnitialized: true}));
+
+app.use(passport.initialize());
+
+
+app.use(passport.session()); //for persistent login sessions
 
 // serve static asset...
 app.use(express.static(__dirname + '/../client/dist'));
 
-app.post('/server/login', (req, res) => {
-  db.getUserByUsername(req.body, (err, results) => {
-    if (err) {
-      res.status(400);
-      res.end('Invalid User.');
+app.post('/server/login', passport.authenticate('local-login'), function (req, res){
+  console.log('Hello');
+  console.log('WAS IT AUTHENTICATED?', req.isAuthenticated());
+  console.log('IS THERE A USER', req.user);
+  console.log('REQ DATA?', req.data);
+  if (!req.isAuthenticated()) {
+    res.status(400);
+    res.end('Invalid User.');
+  } else {
+    if (req.body.remember) {
+      req.session.cookie.maxAge = 1000 * 60 * 3;
     } else {
-      res.status(201).json(results);
+      req.session.cookie.expires = false;
     }
-  });
-});
+    res.status(201).json(req.user);
+  }
+}
+);
 
-app.post('/server/signup', (req, res) => {
-  ///These logs are needed temporarily for heroku testing & logging
-  console.log('INSIDE SERVER ROUTE FOR SIGNUP');
-  console.log('REQ BODY', req.body);
-  db.postUser(req.body, (err, results) => {
-    if (err) {
-      ///These logs are needed temporarily for heroku testing & logging
-      console.log('REACHED ERROR CALLBACK FOR POST USER');
-      res.status(400);
-      res.end('Failed to Create User.');
-    } else {
-      ///These logs are needed temporarily for heroku testing & logging
-      console.log('REACHED SUCCESS CALLBACK FOR POST USER');
-      res.status(201).json(results);
-    }
-  });
-});
+app.post('/server/signup', passport.authenticate('local-signup'),
+function (req, res) {
+  res.status(201).json({message:"Success", username: req.user.username});
+}
+// , (err, results) => {
+//     if (err) {
+//       ///These logs are needed temporarily for heroku testing & logging
+//       console.log('REACHED ERROR CALLBACK FOR POST USER');
+//       res.status(400);
+//       res.end('Failed to Create User.');
+//     } else {
+//       ///These logs are needed temporarily for heroku testing & logging
+//       console.log('REACHED SUCCESS CALLBACK FOR POST USER');
+//       res.status(201).json(results);
+//     }
+// }
+)
+
+
+
 
 // when user search
 app.get('/server/search/:query', (req, res) => {
