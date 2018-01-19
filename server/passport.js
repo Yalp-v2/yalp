@@ -18,7 +18,7 @@ module.exports = function(passport) {
   passport.use(
     'local-signup',
     new LocalStrategy({
-      usernameField: 'username',
+      usernameField: 'email',
       passwordField: 'password',
       passReqToCallback: true
     },
@@ -27,7 +27,7 @@ module.exports = function(passport) {
         console.log(req.body);
         console.log('USERNAME', username);
         console.log('PASSWORD', password);
-        db.query("SELECT * FROM users WHERE username = ?", [username], function(err, rows) {
+        db.query("SELECT * FROM users WHERE email = ?", [username], function(err, rows) {
           if (err) {
             return done(err, null)
           }
@@ -37,7 +37,7 @@ module.exports = function(passport) {
           } else {
 
             var newUser = {
-              username: username,
+              username: req.body.username,
               password: bcrypt.hashSync(password, null, null),
               email: req.body.email,
               name: req.body.name
@@ -68,12 +68,13 @@ module.exports = function(passport) {
   passport.use(
     'local-login',
     new LocalStrategy({
-      usernameField: 'username',
+      usernameField: 'email',
       passwordField: 'password',
       passReqToCallback: true
     },
       function(req, username, password, done) {
-        db.query("SELECT * FROM users WHERE username = ?", [username], function(err, rows) {
+        console.log('USERNAME IN PASSPORT', username);
+        db.query("SELECT * FROM users WHERE email = ?", [username], function(err, rows) {
           if (err) {
             return done(err);
           }

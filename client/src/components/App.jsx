@@ -32,7 +32,9 @@ class App extends React.Component {
         console.log(resp);
         let loginData = {
           username: userData.username,
-          password: userData.password
+          email: userData.email,
+          password: userData.password,
+          name: userData.name
         }
         this.loginUser(loginData);
       })
@@ -43,10 +45,11 @@ class App extends React.Component {
 
   loginUser(userData) {
     let self = this;
+    console.log('THE USER DATA', userData);
     axios.post('/server/login', userData)
       .then(resp => {
         // Removed the existing code that necessitated that the data field be an array type
-        // if (resp.data.length) {
+-        // if (resp.data.length) {
           console.log('WHAT IS THE RESP DATA', resp.data);
           if (resp.data.email) {
           console.log('Rendering..')
