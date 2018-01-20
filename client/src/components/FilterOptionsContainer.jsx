@@ -28,11 +28,13 @@ class SortableComponent extends Component {
   }
   
   onSortEnd({oldIndex, newIndex}) {
-    
-    this.setState({
-      items: arrayMove(this.state.items, oldIndex, newIndex),
-    });
-  };
+    if (newIndex !== oldIndex) {
+      this.props.dragHandler()
+      this.setState({
+        items: arrayMove(this.state.items, oldIndex, newIndex),
+      });
+    };
+  }
   render() {
     return <SortableList items={this.state.items} onSortEnd={this.onSortEnd} />;
   }

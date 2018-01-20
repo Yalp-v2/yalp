@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import BusinessEntry from './BusinessEntry.jsx';
@@ -8,42 +10,26 @@ class BusinessList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      sortTypeToIgnore: null,
+      prioritize: 'rating',
+      filterActive: false,
       entries: this.props.businesses.data,
+      sortedEntries: undefined,
+      filteredEntries: undefined,
       activeFilters: {
-        price: false,
-        rating: false,
         is_open: false,
-        nearby: false,
         favorited: false
       }
     }
 
-    this.sortByPrice = this.sortByPrice.bind(this)
-    this.sortByRating = this.sortByRating.bind(this)
-    this.sortByFavorited = this.sortByFavorited.bind(this)
+    this.sortByFavorited = this.sortByFavorited.bind(this);
     this.sortByOpen = this.sortByOpen.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
   }
   componentWillMount() {
     document.body.style.background = "url('wood.jpg')";
     document.body.style.backgroundSize = "100%";
     document.body.style.backgroundRepeat = "repeat-y";
-  }
-
-  sortByPrice(entriesToSort) {
-    let pricedEntries = entriesToSort.filter(entry => entry.price_level);
-    let sortedPricedEntries = pricedEntries.sort((a, b) => {
-      return b.price_level - a.price_level
-    })
-    return sortedPricedEntries
-  }
-
-  sortByRating(entriesToSort) {
-    let ratedEntries = entriesToSort.sort((a, b) => {
-      return b.rating - a.rating 
-    })
-    return ratedEntries;
   }
 
   sortByFavorited(entriesToSort) {
@@ -57,14 +43,13 @@ class BusinessList extends React.Component {
   }
 
   sortPrioritizeRating(entriesToSort) {
-    entriesToSort = entriesToSort.filter(entry => entry.rating && entry.price_level);
+    console.log('priority: rating')
       let sorted = entriesToSort.sort((a, b) => {
         if (a.rating > b.rating) {
           return -1
         } else if (b.rating > a.rating) {
           return 1 
         } else if (b.rating == a.rating) {
-          // console.log('even ', a.name, b.name, ' sorting by price')
           if (a.price_level > b.price_level) {
             return -1;
           } else if (b.price_level > a.price_level) {
@@ -76,13 +61,14 @@ class BusinessList extends React.Component {
   }
 
   sortPrioritizePrice(entriesToSort) {
-    let sorted = entriesToSort.sort((a, b) => {
+    console.log('priority: price')
+    let entriesWithPrices = entriesToSort.filter(entry => entry.price_level);
+    let sorted = entriesWithPrices.sort((a, b) => {
       if (a.price_level > b.price_level) {
         return -1
       } else if (b.price_level > a.price_level) {
         return 1 
       } else if (b.price_level == a.price_level) {
-        // console.log('even ', a.name, b.name, ' sorting by rating')
         if (a.rating > b.rating) {
           return -1;
         } else if (b.rating > a.rating) {
@@ -93,9 +79,6 @@ class BusinessList extends React.Component {
     return sorted 
   }
 
-
-
-
   sortByOpen(entriesToSort) {
     let openEntries = entriesToSort.filter(entry => {
       if (entry.hasOwnProperty('opening_hours') && entry.opening_hours.open_now){
@@ -105,16 +88,12 @@ class BusinessList extends React.Component {
     return openEntries
   }
 
-
-  applyFilters(priority) {
-
+  applyFilters(entries) {
     let operation;
-    let entries = this.props.businesses.data;
-    let filters = Object.keys(this.state.activeFilters).filter(key => this.state.activeFilters[key]);
-    console.log(filters)
-
-    // reduce this.state.activeFilters object to only keys where values are tru
-
+    let filters = {
+      favorited: this.sortByFavorited,
+      is_open: this.sortByOpen
+    }
 
     for (let filter in filters) { 
       if (this.state.activeFilters[filter]) {
@@ -125,9 +104,22 @@ class BusinessList extends React.Component {
     return entries;
   }
 
-  updateState(filteredEntries) {
-    this.setState({entries: filteredEntries});
+  applySorting(entries) {
+    let sortedEntries;
+    if (this.state.prioritize){ 
+      if (this.state.prioritize === 'rating') { 
+        sortedEntries = this.sortPrioritizeRating(entries)
+      } else if (this.state.prioritize === 'price'){
+        sortedEntries = this.sortPrioritizePrice(entries);
+      } 
+    }
+
+   return sortedEntries
   }
+
+  // updateState(entries, type) {
+  //   this.setState({entries: filteredEntries});
+  // }
 
   displayBusinessEntries() {
     const { favorites } = this.props;
@@ -140,12 +132,35 @@ class BusinessList extends React.Component {
     )
   }
 
+  handleDrag() {
+    let newPriority = this.state.prioritize === 'rating' ? 'price' : 'rating'; // even if undefined will set to rating (which is ideal default anyway)
+    this.setState({prioritize: newPriority}) 
+
+    let filtered = this.applyFilters(this.props.businesses.data)
+    let sorted = this.applySorting(filtered)
+  
+    this.setState({sortedEntries: sorted})
+    this.setState({entries: sorted});
+  }
+
   clickHandler(filter) {
+    let filteredEntries;
     let toggled = !this.state.activeFilters[filter];
-    this.state.activeFilters[filter] = toggled;
-    this.state.entries = this.applyFilters();
-    let state = this.state;
-    this.setState(state)
+
+    this.state.activeFilters[filter] = toggled; 
+    this.state.filterActive = toggled;
+  
+    let newFilters = this.state.activeFilters 
+
+    this.setState({activeFilters: newFilters})
+
+    let sorted = this.applySorting(this.props.businesses.data);
+  
+    let filtered = this.applyFilters(sorted);
+
+    this.setState({entries: filtered})
+
+   
   }
 
     render() {
@@ -160,7 +175,7 @@ class BusinessList extends React.Component {
          }}> Favorited </button>
       </div>
       <div className="sortingOptionsBar">
-      <Sortable click={this.clickHandler} items={["Price", "Rating"]}/>
+      <Sortable click={this.clickHandler} dragHandler={this.handleDrag} items={["Rating", "Price"]}/>
       </div>
         {this.displayBusinessEntries()}
       </div>
