@@ -10,8 +10,8 @@ const SortableList = SortableContainer(({items}) => {
   return (
     <ul>
       {items.map((value, index) => (
-       <button className="sortingOptionDrag" style={index == 0 ? {"backgroundColor": "green"} : {"backgroundColor": "red"}} onClick={ () => {
-        }}> <SortableItem key={`item-${index}`} index={index} value={value} /> </button>
+       <button className="sortingOptionDrag" style={index == 0 ? {"backgroundColor": "green"} : {"backgroundColor": "red"}}> 
+       <SortableItem key={`item-${index}`} index={index} value={value} /> </button>
       ))}
     </ul>
   );
