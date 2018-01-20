@@ -3,13 +3,19 @@ import axios from 'axios';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import {Link} from 'react-router-dom';
-import ProfileInfo from './ProfileInfo.jsx';
+import ProfileFavoriteDetails from './ProfileFavoriteDetails.jsx';
+import ProfileReviewDetails from './ProfileReviewDetails.jsx';
+import ProfileCheckinDetails from './ProfileCheckinDetails.jsx';
+import ProfileFriendDetails from './ProfileFriendDetails.jsx';
 
 class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showFavorites: false,
+      showReviews: false,
+      showCheckins: false,
+      showFriends: false,
       user: null,
       friends: [],
       checkins: [],
@@ -17,7 +23,6 @@ class Profile extends React.Component {
       favorites: []
     };
     TimeAgo.locale(en);
-    this.renderFavorites = this.renderFavorites.bind(this);
   }
 
   createDate(createdAt) {
@@ -136,20 +141,6 @@ class Profile extends React.Component {
     return '';
   }
 
-  renderFavorites() {
-    const { favorites } = this.state;
-    <ProfileInfo favorites={this.state.favorites} />  
-    // if (favorites.length) {
-    //   return favorites.map((favorite, index) => {
-    //     return (
-    //       <ul>
-    //         <li><div key={favorite.id}>{favorites[index].business_name}</div></li>   
-    //       </ul>
-    //     );
-    //   });
-    // }
-    // return '';
-  }
 
   componentDidMount() {
     this.fetchProfile();
@@ -167,24 +158,32 @@ class Profile extends React.Component {
           <hr/>
           {this.renderUserInfo()}
         </div>
-        <div>
-          <div>Friends</div>
-          {this.renderFriends()}
-        </div>
-        <div>
-          <div>Check-ins</div>
-          {this.renderCheckins()}
-        </div>
-        <div>
-          <div>Reviews</div>
-          {this.renderReviews()}
-        </div>
-        <div>
+
+
+          <div onClick={ () => {
+            this.setState({showFriends: !this.state.showFriends})
+          }}>Friends</div>
+          {this.state.showFriends && this.state.friends.length ? <ProfileFriendDetails friends={this.state.friends} /> : null}
+       
+       
+
+         <div onClick={ () => {
+          this.setState({showCheckins: !this.state.showCheckins})
+         }}> Checkins </div>
+         {this.state.showCheckins && this.state.checkins.length ? <ProfileCheckinDetails checkins={this.state.checkins} /> : null}
+
+        <div onClick={ () => {
+            this.setState({showReviews: !this.state.showReviews})
+          }}>Reviews</div>
+            {this.state.showReviews && this.state.reviews.length ? <ProfileReviewDetails reviews={this.state.reviews} /> : null }  
+        
+
           <div onClick={ () => {
             this.setState({showFavorites: !this.state.showFavorites})
           }}>Favorites</div>
-            {this.state.showFavorites ? <ProfileInfo favorites={this.state.favorites} /> : null}  
-        </div>
+            {this.state.showFavorites ? <ProfileFavoriteDetails favorites={this.state.favorites} /> : null}   
+
+
       </div>
     );
   }
