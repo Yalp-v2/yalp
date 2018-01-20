@@ -138,9 +138,7 @@ class BusinessList extends React.Component {
         <button id="filterFavorited" className="filterButton" style={this.state.activeFilters.favorited ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () => {
            this.clickHandler('favorited');
          }}> Favorited </button>
-      </div>
-      <div className="sortingOptionsBar">
-      <Sortable click={this.clickHandler} dragHandler={this.handleDrag} items={["Rating", "Price"]}/>
+      <Sortable click={this.clickHandler} className="sortingOptions" dragHandler={this.handleDrag} items={["Rating", "Price"]}/>
       </div>
         {this.displayBusinessEntries()}
       </div>
