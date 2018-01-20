@@ -3,11 +3,13 @@ import axios from 'axios';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import {Link} from 'react-router-dom';
+import ProfileInfo from './ProfileInfo.jsx';
 
 class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      showFavorites: false,
       user: null,
       friends: [],
       checkins: [],
@@ -15,6 +17,7 @@ class Profile extends React.Component {
       favorites: []
     };
     TimeAgo.locale(en);
+    this.renderFavorites = this.renderFavorites.bind(this);
   }
 
   createDate(createdAt) {
@@ -135,16 +138,17 @@ class Profile extends React.Component {
 
   renderFavorites() {
     const { favorites } = this.state;
-    if (favorites.length) {
-      return favorites.map((favorite, index) => {
-        return (
-          <ul>
-            <li><div key={favorite.id}>{favorites[index].business_name}</div></li>   
-          </ul>
-        );
-      });
-    }
-    return '';
+    <ProfileInfo favorites={this.state.favorites} />  
+    // if (favorites.length) {
+    //   return favorites.map((favorite, index) => {
+    //     return (
+    //       <ul>
+    //         <li><div key={favorite.id}>{favorites[index].business_name}</div></li>   
+    //       </ul>
+    //     );
+    //   });
+    // }
+    // return '';
   }
 
   componentDidMount() {
@@ -158,7 +162,6 @@ class Profile extends React.Component {
   render() {
     return (
       <div className="profileContainer">
-       
         <div>
           <h2> {this.state.user  ? this.state.user.name : null}</h2>
           <hr/>
@@ -177,8 +180,10 @@ class Profile extends React.Component {
           {this.renderReviews()}
         </div>
         <div>
-          <div>Favorites</div>
-          {this.renderFavorites()}
+          <div onClick={ () => {
+            this.setState({showFavorites: !this.state.showFavorites})
+          }}>Favorites</div>
+            {this.state.showFavorites ? <ProfileInfo favorites={this.state.favorites} /> : null}  
         </div>
       </div>
     );

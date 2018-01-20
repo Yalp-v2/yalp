@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import BusinessEntry from './BusinessEntry.jsx';
@@ -11,10 +9,7 @@ class BusinessList extends React.Component {
     super(props)
     this.state = {
       prioritize: 'rating',
-      filterActive: false,
       entries: this.props.businesses.data,
-      sortedEntries: undefined,
-      filteredEntries: undefined,
       activeFilters: {
         is_open: false,
         favorited: false
@@ -33,7 +28,7 @@ class BusinessList extends React.Component {
   }
 
   sortByFavorited(entriesToSort) {
-    const favorites = this.props.favorites;
+    const { favorites } = this.props;
     let favoritedEntries = entriesToSort.filter(entry => {
       if (favorites[entry.id]){
        return entry
@@ -43,7 +38,6 @@ class BusinessList extends React.Component {
   }
 
   sortPrioritizeRating(entriesToSort) {
-    console.log('priority: rating')
       let sorted = entriesToSort.sort((a, b) => {
         if (a.rating > b.rating) {
           return -1
@@ -61,7 +55,6 @@ class BusinessList extends React.Component {
   }
 
   sortPrioritizePrice(entriesToSort) {
-    console.log('priority: price')
     let entriesWithPrices = entriesToSort.filter(entry => entry.price_level);
     let sorted = entriesWithPrices.sort((a, b) => {
       if (a.price_level > b.price_level) {
@@ -89,15 +82,13 @@ class BusinessList extends React.Component {
   }
 
   applyFilters(entries) {
-    let operation;
     let filters = {
       favorited: this.sortByFavorited,
       is_open: this.sortByOpen
     }
-
     for (let filter in filters) { 
       if (this.state.activeFilters[filter]) {
-        operation = filters[filter]
+        let operation = filters[filter]
         entries = operation(entries)
       }
     }
@@ -105,21 +96,9 @@ class BusinessList extends React.Component {
   }
 
   applySorting(entries) {
-    let sortedEntries;
-    if (this.state.prioritize){ 
-      if (this.state.prioritize === 'rating') { 
-        sortedEntries = this.sortPrioritizeRating(entries)
-      } else if (this.state.prioritize === 'price'){
-        sortedEntries = this.sortPrioritizePrice(entries);
-      } 
-    }
-
-   return sortedEntries
+    let sortedEntries = this.state.prioritize === 'rating' ? this.sortPrioritizeRating(entries) : this.sortPrioritizePrice(entries);
+    return sortedEntries
   }
-
-  // updateState(entries, type) {
-  //   this.setState({entries: filteredEntries});
-  // }
 
   displayBusinessEntries() {
     const { favorites } = this.props;
@@ -133,50 +112,36 @@ class BusinessList extends React.Component {
   }
 
   handleDrag() {
-    let newPriority = this.state.prioritize === 'rating' ? 'price' : 'rating'; // even if undefined will set to rating (which is ideal default anyway)
+    let newPriority = this.state.prioritize === 'rating' ? 'price' : 'rating'; 
     this.setState({prioritize: newPriority}) 
-
     let filtered = this.applyFilters(this.props.businesses.data)
     let sorted = this.applySorting(filtered)
-  
-    this.setState({sortedEntries: sorted})
     this.setState({entries: sorted});
   }
 
   clickHandler(filter) {
-    let filteredEntries;
-    let toggled = !this.state.activeFilters[filter];
-
-    this.state.activeFilters[filter] = toggled; 
-    this.state.filterActive = toggled;
-  
+    this.state.activeFilters[filter] = !this.state.activeFilters[filter];
     let newFilters = this.state.activeFilters 
-
     this.setState({activeFilters: newFilters})
-
     let sorted = this.applySorting(this.props.businesses.data);
-  
     let filtered = this.applyFilters(sorted);
-
     this.setState({entries: filtered})
-
-   
   }
 
     render() {
     return (
       <div>
-      <div className="filterOptionsBar">
-        <button id="filterOpen" className="filterButton" style={this.state.activeFilters.is_open ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () => {
-          this.clickHandler('is_open');
-        }}> Is Open </button>
-        <button id="filterFavorited" className="filterButton" style={this.state.activeFilters.favorited ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () => {
-           this.clickHandler('favorited');
-         }}> Favorited </button>
-      </div>
-      <div className="sortingOptionsBar">
-      <Sortable click={this.clickHandler} dragHandler={this.handleDrag} items={["Rating", "Price"]}/>
-      </div>
+        <div className="optionsBar">
+          <div className="filterOptionsBar">
+            <button id="filterOpen" className="filterButton" style={this.state.activeFilters.is_open ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () => {
+              this.clickHandler('is_open');
+            }}> Is Open </button>
+            <button id="filterFavorited" className="filterButton" style={this.state.activeFilters.favorited ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () => {
+               this.clickHandler('favorited');
+             }}> Favorited </button>
+          </div>
+          <Sortable click={this.clickHandler} className="sortingOptions" dragHandler={this.handleDrag} items={["Rating", "Price"]}/>
+        </div>
         {this.displayBusinessEntries()}
       </div>
     )
