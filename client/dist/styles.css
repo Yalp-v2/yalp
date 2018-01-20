@@ -123,6 +123,7 @@ a {
 .filterOptionsBar {
   text-align: center;
   display: inline-block;
+  float:left ;
 }
 
 .filterButton {
@@ -142,6 +143,7 @@ a {
 }
 
 .sortingOptions {
+  float: right;
   text-align: center;
   display: inline-block;
 }
@@ -150,6 +152,7 @@ a {
   display: block;
   margin: 5px;
   border-radius: 5px;
+  overflow: hidden;
 }
 
 .title {

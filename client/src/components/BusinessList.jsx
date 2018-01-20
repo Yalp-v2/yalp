@@ -131,15 +131,17 @@ class BusinessList extends React.Component {
     render() {
     return (
       <div>
-      <div className="filterOptionsBar">
-        <button id="filterOpen" className="filterButton" style={this.state.activeFilters.is_open ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () => {
-          this.clickHandler('is_open');
-        }}> Is Open </button>
-        <button id="filterFavorited" className="filterButton" style={this.state.activeFilters.favorited ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () => {
-           this.clickHandler('favorited');
-         }}> Favorited </button>
-      <Sortable click={this.clickHandler} className="sortingOptions" dragHandler={this.handleDrag} items={["Rating", "Price"]}/>
-      </div>
+        <div className="optionsBar">
+          <div className="filterOptionsBar">
+            <button id="filterOpen" className="filterButton" style={this.state.activeFilters.is_open ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () => {
+              this.clickHandler('is_open');
+            }}> Is Open </button>
+            <button id="filterFavorited" className="filterButton" style={this.state.activeFilters.favorited ? {"backgroundColor": "green"} :  {"backgroundColor": "red"}} onClick={ () => {
+               this.clickHandler('favorited');
+             }}> Favorited </button>
+          </div>
+          <Sortable click={this.clickHandler} className="sortingOptions" dragHandler={this.handleDrag} items={["Rating", "Price"]}/>
+        </div>
         {this.displayBusinessEntries()}
       </div>
     )
