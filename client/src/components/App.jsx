@@ -149,7 +149,7 @@ class App extends React.Component {
 
   checkIn(business) {
     let userBusinessObj = {
-      userId: this.state.userId,
+      userId: this.state.userID,
       business: business
     }
     axios.post('/server/profile/checkins', userBusinessObj)
