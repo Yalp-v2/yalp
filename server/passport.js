@@ -23,10 +23,6 @@ module.exports = function(passport) {
       passReqToCallback: true
     },
       function(req, username, password, done) {
-        console.log('IN THE PASSPORT SIGNUP CONTAINER!!');
-        console.log(req.body);
-        console.log('USERNAME', username);
-        console.log('PASSWORD', password);
         db.query("SELECT * FROM users WHERE email = ?", [username], function(err, rows) {
           if (err) {
             return done(err, null)
@@ -73,7 +69,6 @@ module.exports = function(passport) {
       passReqToCallback: true
     },
       function(req, username, password, done) {
-        console.log('USERNAME IN PASSPORT', username);
         db.query("SELECT * FROM users WHERE email = ?", [username], function(err, rows) {
           if (err) {
             return done(err);
@@ -89,8 +84,6 @@ module.exports = function(passport) {
             // return done(null, false,
             // req.flash('loginMessage', 'Oops! Wrong password.'));
           }
-          console.log('WHAT IS THE ROWS PROP', rows);
-          console.log('WHAT IS THE FIRST INDEX', rows[0]);
           return done(null, rows[0]);
         })
       }

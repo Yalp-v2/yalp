@@ -28,10 +28,6 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.use('/', v2Index);
 
 app.post('/server/login', passport.authenticate('local-login'), function (req, res){
-  console.log('Hello');
-  console.log('WAS IT AUTHENTICATED?', req.isAuthenticated());
-  console.log('IS THERE A USER', req.user);
-  console.log('REQ DATA?', req.data);
   if (!req.isAuthenticated()) {
     res.status(400);
     res.end('Invalid User.');
@@ -65,9 +61,6 @@ function (req, res) {
 // }
 )
 
-
-
-
 // when user search
 app.get('/server/search/:query', (req, res) => {
   api.searchBusinesses(req.params.query, req.url.split('=')[1], results => {
@@ -88,6 +81,7 @@ app.get('/server/search/:query', (req, res) => {
         })
       })
     }
+
     res.status(201).json(results.data.results);
   })
   // use below for test
@@ -156,7 +150,6 @@ app.post('/review', (req, res) => {
       res.status(400);
       res.end('Unable to submit new review');
     } else {
-      console.log(results);
       res.status(201).json(results);
     }
   })
@@ -215,7 +208,6 @@ app.get('/server/user/:id', (req, res) => {
       res.send(400)
       res.end('Unable to retrieve username from id')
     } else {
-      console.log(results);
       res.status(201).json(results)
     }
   })
@@ -239,7 +231,7 @@ app.get('/server/profile/checkins', (req, res) => {
 
 app.post('/profile/favorites', (req, res) => {
   const { userId, businessId, businessName } = req.body;
-  console.log(userId, businessId)
+  console.log(userId, businessId);
   db.addFavorite(userId, businessId, businessName, (err, result) => {
     res.status(201).json(result);
   })

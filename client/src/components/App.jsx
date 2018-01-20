@@ -20,7 +20,7 @@ class App extends React.Component {
       loggedIn: false,
       checkedIn: false,
       favorites: {},
-      location: null
+      location: null // must initiate null
     }
     this.photos = [];
     this.searchResults = {};
@@ -48,21 +48,17 @@ class App extends React.Component {
       } else {
         let lat = success.coords.latitude.toFixed(4)
         let lon = success.coords.longitude.toFixed(4)
-        console.log(lat + ' ' + lon)
-        console.log(this.state.userID)
         this.setState({
           location: lat + ',' + lon
         })
       }
     })
-
   }
 
   createUser(userData) {
     let self = this;
     axios.post('/server/signup', userData)
       .then(resp => {
-        console.log(resp);
         let loginData = {
           username: userData.username,
           email: userData.email,
@@ -78,12 +74,10 @@ class App extends React.Component {
 
   loginUser(userData) {
     let self = this;
-    console.log('THE USER DATA', userData);
     axios.post('/server/login', userData)
       .then(resp => {
         // Removed the existing code that necessitated that the data field be an array type
--        // if (resp.data.length) {
-          console.log('WHAT IS THE RESP DATA', resp.data);
+        // if (resp.data.length) {
           if (resp.data.email) {
           console.log('Rendering..')
           this.setState({
@@ -252,6 +246,7 @@ class App extends React.Component {
               username={this.state.username}
               userId={this.state.userID}
               checkedIn={this.state.checkedIn}
+              location={this.state.location}
               getBusinessPhotos={this.getBusinessPhotos.bind(this)}
               photos={this.photos}
               favoriteIn={this.favoriteIn.bind(this)}

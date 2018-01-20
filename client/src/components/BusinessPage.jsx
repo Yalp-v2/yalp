@@ -19,7 +19,7 @@ class BusinessPage extends React.Component {
       <div className="businessPage">
         <Search getBusinesses={this.props.getBusinesses}/>
         <div onClick={e => {this.props.backToResults()}} className="backBtn">{"<"} Search Results</div><br />
-        <BusinessInfo business={this.props.business}/>
+        <BusinessInfo business={this.props.business} location={this.props.location}/>
         <div className="business-page-btns">
           <span>
             {
