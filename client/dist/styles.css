@@ -122,8 +122,6 @@ a {
 
 .filterOptionsBar {
   text-align: center;
-  border: solid yellow 1px;
-  border-radius: 5px;
 }
 
 .filterButton {
@@ -132,14 +130,27 @@ a {
   border-radius: 5px;
 }
 
-.rating {
-  margin: 3px 0px;
-}
 .logo {
   float: left;
   margin-top: 6px;
   width: 2.5%;
 }
+
+.rating {
+  margin: 3px 0px;
+}
+
+.sortingOptionsBar {
+  text-align: center;
+
+}
+
+.sortingOptionDrag {
+  display: block;
+  margin: 5px;
+  border-radius: 5px;
+}
+
 .title {
   position: absolute;
   left: 140px;

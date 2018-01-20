@@ -3,14 +3,16 @@ import {render} from 'react-dom';
 import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
 
 const SortableItem = SortableElement(({value}) =>
-  <li>{value}</li>
+  <div>{value}</div>
 );
 
 const SortableList = SortableContainer(({items}) => {
   return (
     <ul>
       {items.map((value, index) => (
-        <SortableItem key={`item-${index}`} index={index} value={value} />
+       <button className="sortingOptionDrag" onClick={ () => {
+          console.log('setting ' + value + ' to '+ index)
+        }}> <SortableItem key={`item-${index}`} index={index} value={value} /> </button>
       ))}
     </ul>
   );
@@ -20,15 +22,19 @@ class SortableComponent extends Component {
   constructor(props){
     super(props);
     this.state = {
-      items: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6'],
+      items: this.props.items,
     };
+    this.onSortEnd = this.onSortEnd.bind(this);
   }
   
   onSortEnd({oldIndex, newIndex}) {
-    this.setState({
-      items: arrayMove(this.state.items, oldIndex, newIndex),
-    });
-  };
+    if (newIndex !== oldIndex) {
+      this.props.dragHandler()
+      this.setState({
+        items: arrayMove(this.state.items, oldIndex, newIndex),
+      });
+    };
+  }
   render() {
     return <SortableList items={this.state.items} onSortEnd={this.onSortEnd} />;
   }
