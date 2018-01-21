@@ -10,7 +10,7 @@ if (process.env.JAWSDB_URL) {
   connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'toor',
     database: 'yalp'
   })
 }
@@ -262,14 +262,18 @@ const getFriendsFavorites2 = function(userId, businessId, cb) {
 const addCheckIn = function (userId, businessId, businessName, cb) {
   checkCheckIn(userId, businessId, (err, bool) => {
     if (bool) {
+      console.log('already checked in')
       cb(false)
     } else {
+      console.log('adding checkin' + userId)
       let query = `INSERT INTO checkins (user_id, business_id, business_name) VALUES (${userId}, "${businessId}", "${businessName}");`
 
       connection.query(query, (err, results) => {
         if (err) {
+          console.log('failed checkin ' + err)
           cb(err)
         } else {
+          console.log('success checkin' + results)
           cb(null, results)
         }
       })
@@ -291,9 +295,9 @@ const tempSearch = function (search, cb) {
   })
 }
 
-const addNewReview = function (userId, businessId, review, cb) {
+const addNewReview = function (userId, businessId, businessName, review, cb) {
 
-  let query = 'INSERT INTO reviews (user_id, business_id, rating, text) VALUES (?, ?, ?, ?)';
+  let query = `INSERT INTO reviews (user_id, business_id, business_name, rating, text) VALUES (${userId}, '${businessId}', '${businessName}', ${review.rating}, '${review.text}');`
   let params = [userId, businessId, review.rating, review.text];
 
   connection.query(query, params, (err, results) => {
@@ -356,8 +360,8 @@ const getCheckins = function(userId, cb) {
 };
 
 const getReviews = function(userId, cb) {
-    let query = 'select a.id, businesses.name, a.text, a.rating, a.createdAt from (select * from reviews where reviews.user_id = ?) a left join businesses on a.business_id = businesses.id';
-
+   // let query = 'select a.id, businesses.name, a.text, a.rating, a.createdAt from (select * from reviews where reviews.user_id = ?) a left join businesses on a.business_id = businesses.id';
+   let query = 'select * from reviews where user_id = ?;'
     connection.query(query, [userId], (err, results) => {
         if (err) {
             cb(err, null);
