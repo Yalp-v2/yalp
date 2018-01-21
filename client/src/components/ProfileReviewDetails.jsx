@@ -9,7 +9,7 @@ class ProfileReviewDetails extends React.Component {
 		return (
 			<div>
 				<ul>
-		      {this.props.reviews.map((review, index) => <li key={index}> {review.text} </li> )}
+		      {this.props.reviews.map((review, index) => <div key={index}><b> {review.business_name}</b> - {review.text} </div> )}
 		      </ul>
       </div>
 			)

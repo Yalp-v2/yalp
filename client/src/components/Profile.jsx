@@ -94,54 +94,6 @@ class Profile extends React.Component {
     ] : '';
   }
 
-  renderFriends() {
-    const { friends } = this.state;
-    if (friends.length) {
-      return friends.map(friend => {
-        return (
-          <div key={friend.id}>
-            {friend.username + '  ' + this.createDate(friend.createdAt)}
-          </div>
-        );
-      });
-    }
-    return '';
-  }
-
-  renderCheckins() {
-    const { checkins } = this.state;
-    if (checkins.length) {
-      return checkins.map(checkin => {
-        return (
-          <div key={checkin.id}>
-          <ul>
-           <li> <div>{checkin.business_name}</div>
-            <div>{this.createDate(checkin.createdAt)}</div></li>
-          </ul>
-          </div>
-        );
-      });
-    }
-    return '';
-  }
-
-  renderReviews() {
-    const { reviews } = this.state;
-    if (reviews.length) {
-      return reviews.map(review => {
-        return (
-          <div key={review.id}>
-            <div>{review.name}</div>
-            <div>{review.text}</div>
-            <div>{this.createDate(review.createdAt)}</div>
-          </div>
-        );
-      });
-    }
-    return '';
-  }
-
-
   componentDidMount() {
     this.fetchProfile();
     this.fetchFriends();

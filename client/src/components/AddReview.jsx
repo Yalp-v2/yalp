@@ -49,7 +49,8 @@ class AddReview extends React.Component {
         rating: this.state.rating,
         text: this.state.text,
         userID: this.props.userId,
-        businessID: this.props.business.id
+        businessID: this.props.business.id,
+        businessName: this.props.business.name
       })
       .then(function(response) {
         console.log(response)

@@ -145,7 +145,8 @@ app.post('/review', (req, res) => {
     rating: req.body.rating,
     text: req.body.text
   }
-  db.addNewReview(req.body.userID, req.body.businessID, review, (err, results) => {
+  console.log(req.body)
+  db.addNewReview(req.body.userID, req.body.businessID, req.body.businessName, review, (err, results) => {
     if (err) {
       res.status(400);
       res.end('Unable to submit new review');
@@ -246,19 +247,25 @@ app.get('/profile/favorites/:userId', (req, res) => {
 });
 
 app.get('/user/friends/:id', (req, res) => {
+  console.log('fetching friends')
   db.getFriends(parseInt(req.params.id), (err, result) => {
+    err ? console.log(err) : console.log(result)
     res.status(200).json(result);
   });
 });
 
 app.get('/user/checkins/:id', (req, res) => {
+  console.log('fetching checkins');
   db.getCheckins(parseInt(req.params.id), (err, result) => {
+  err ? console.log(err) : console.log(result)
     res.status(200).json(result);
   });
 });
 
 app.get('/user/reviews/:id', (req, res) => {
+  console.log('fetching reviews');
   db.getReviews(parseInt(req.params.id), (err, result) => {
+    err ? console.log(err) : console.log(result)
     res.status(200).json(result);
   });
 });
